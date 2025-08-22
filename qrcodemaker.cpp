@@ -44,6 +44,11 @@ int main(int argc, char *argv[]) {
     layout->addWidget(svgWidget);
 
     QObject::connect(lineEdit, &QLineEdit::textChanged, [&](const QString &text){
+        if(text.isEmpty()) {
+                    svgWidget->setSvgData(
+            QString::fromUtf8(qrcodegen::QrCode::encodeText("https://github.com/yosefshalomtz/qrcodemaker_tool.git", qrcodegen::QrCode::Ecc::HIGH).toSvgString(2).c_str()).toUtf8()
+        );
+        }
         svgWidget->setSvgData(
             QString::fromUtf8(qrcodegen::QrCode::encodeText(text.toStdString().c_str(), qrcodegen::QrCode::Ecc::HIGH).toSvgString(2).c_str()).toUtf8()
         );
