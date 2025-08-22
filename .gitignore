@@ -1,1 +1,7 @@
 .vscode/
+debug/
+release/
+*.stash
+MakeFile
+*.Debug
+*.Release
