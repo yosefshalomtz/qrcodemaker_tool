@@ -273,7 +273,7 @@ class QrCode final {
 	 */
 	public: static QrCode encodeBinary(const std::vector<std::uint8_t> &data, Ecc ecl);
 
-	public: std::string toSvgString(int border);
+	public: std::string toSvgString(int border, bool circle);
 	
 	
 	/*---- Static factory functions (mid level) ----*/
