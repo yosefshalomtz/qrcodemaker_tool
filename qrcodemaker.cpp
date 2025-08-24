@@ -10,6 +10,7 @@
 #include <QMainWindow>
 #include <QActionGroup>
 #include <QInputDialog>
+#include <QFileDialog>
 
 #include "qrcodegen.hpp"
 
@@ -58,7 +59,12 @@ int main(int argc, char *argv[])
     window.setCentralWidget(&centralWidget);
     QVBoxLayout *layout = new QVBoxLayout(&centralWidget);
     QMenuBar* menuBar = new QMenuBar(&window);
+    QMenu* fileMenu = menuBar->addMenu("file");
     QMenu* optionMenu = menuBar->addMenu("option");
+
+    QAction* save_svg_action = fileMenu->addAction("Save as svg");
+    QAction* exit_action = fileMenu->addAction("Exit");
+    save_svg_action->setShortcut(QKeySequence::Save);
 
     QMenu* bits_style_menu = optionMenu->addMenu("bits style");
     QActionGroup* bits_style_menu_actions = new QActionGroup(bits_style_menu);
@@ -146,6 +152,25 @@ int main(int argc, char *argv[])
     {
         svgWidget->setSvgData(getSvgDataFromText(text));
     });
+
+    // file menu listeners
+    QObject::connect(exit_action, &QAction::triggered, [&](){app.exit();});
+    QObject::connect(save_svg_action, &QAction::triggered, [&]()
+    {
+        QString fileName = QFileDialog::getSaveFileName(&window, "Save SVG", "", "SVG files (*.svg);;All files (*.*)");
+        if(!fileName.isEmpty())
+        {
+            QFile file(fileName);
+            if(file.open(QIODevice::WriteOnly))
+            {
+                file.write(getSvgDataFromText(textToEncodeLineEdit->text()));
+                file.close();
+            }
+        }
+    });
+
+    // CTRL+S (save as svg) action listener
+    
 
     window.resize(500, 500);
     window.show();
